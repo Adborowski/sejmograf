@@ -2,15 +2,24 @@ import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect, useContext } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
-import getFormattedDate from "../utils/getFormattedDate";
-import StarsRating from "./StarsRating";
 import Review from "./Review";
+import { Star } from "./StarsRating";
+
+const AverageRating = ({ averageRating }) => {
+  return (
+    <View>
+      <Text>
+        <Star count={1} index={0} /> {averageRating}
+      </Text>
+    </View>
+  );
+};
 
 const Reviews = ({ id, data }) => {
   const ctx = useContext(FirebaseContext);
   const { ref, database, onValue } = ctx;
-
   const [reviews, setReviews] = useState();
+  const [average, setAverage] = useState();
   const navigation = useNavigation();
 
   let prefix = "";
@@ -43,12 +52,23 @@ const Reviews = ({ id, data }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (reviews) {
+      // get average star rating
+      const totalStars = reviews.reduce((a, c) => a + c.stars, 0);
+      const avgStars = totalStars / reviews.length;
+      const avgStarsString = avgStars.toFixed(2);
+      setAverage(avgStarsString);
+    }
+  }, [reviews]);
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
         {reviews && (
           <View style={styles.prefixWrapper}>
             <Text style={styles.prefix}>{prefix}</Text>
+            <AverageRating averageRating={average} />
           </View>
         )}
         <Pressable
@@ -76,7 +96,7 @@ const Reviews = ({ id, data }) => {
 export default Reviews;
 
 const styles = StyleSheet.create({
-  container: { marginTop: 6 },
+  container: { flex: 1 },
   topBar: {
     flexDirection: "row",
     gap: 12,

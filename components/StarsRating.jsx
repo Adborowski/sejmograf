@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const Star = ({ index, count, setCount }) => {
+export const Star = ({ index, count, setCount }) => {
   const handlePress = () => {
     if (setCount) {
       setCount(index + 1);
