@@ -3,6 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect, useContext } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import getFormattedDate from "../utils/getFormattedDate";
+import StarsRating from "./StarsRating";
+import Review from "./Review";
 
 const Reviews = ({ id, data }) => {
   const ctx = useContext(FirebaseContext);
@@ -63,16 +65,7 @@ const Reviews = ({ id, data }) => {
           data={reviews}
           ItemSeparatorComponent={() => <View style={styles.separator}></View>}
           renderItem={({ item }) => {
-            return (
-              <View style={styles.review}>
-                <View style={styles.dateWrapper}>
-                  <Text style={styles.date}>{getFormattedDate(item.date)}</Text>
-                </View>
-                <View style={styles.reviewTextWrapper}>
-                  <Text style={styles.reviewText}>{item.reviewText}</Text>
-                </View>
-              </View>
-            );
+            return <Review item={item} />;
           }}
         />
       )}
@@ -108,6 +101,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa",
     padding: 6,
     borderRadius: 6,
+  },
+  reviewInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   separator: {
     height: 6,

@@ -7,10 +7,11 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import { getUniqueId } from "../utils/getUniqueId";
 import { useNavigation } from "@react-navigation/native";
+import StarsRating from "./StarsRating";
 
 const ReviewWriter = ({ id, data }) => {
   const navigation = useNavigation();
@@ -27,6 +28,11 @@ const ReviewWriter = ({ id, data }) => {
 
   const [reviewText, setReviewText] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [starCount, setStarCount] = useState(0);
+
+  useEffect(() => {
+    console.log(starCount + " stars");
+  }, [starCount]);
 
   const handleSubmit = () => {
     let now = new Date();
@@ -42,6 +48,7 @@ const ReviewWriter = ({ id, data }) => {
         reviewedItemId: id,
         reviewText: reviewText,
         date: now,
+        stars: starCount,
       }).then(() => {
         setFeedback("Dodano recenzję!");
         navigation.goBack();
@@ -57,8 +64,8 @@ const ReviewWriter = ({ id, data }) => {
     <KeyboardAvoidingView keyboardVerticalOffset={110} behavior={"position"}>
       <View style={styles.container}>
         <Text>{prefix}</Text>
+        <StarsRating count={starCount} setCount={setStarCount} />
         <TextInput
-          autoFocus={true}
           multiline={true}
           placeholder="Twoja recenzja"
           style={styles.input}
@@ -67,7 +74,10 @@ const ReviewWriter = ({ id, data }) => {
         <View style={styles.bottomBar}>
           <Pressable
             onPress={handleSubmit}
-            style={[styles.btn, !reviewText ? styles.disabled : ""]}
+            style={[
+              styles.btn,
+              !reviewText || !starCount ? styles.disabled : "",
+            ]}
           >
             <Text style={styles.btnText}>Wyślij</Text>
           </Pressable>
