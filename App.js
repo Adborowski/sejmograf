@@ -7,6 +7,7 @@ import DocumentsScreen from "./screens/DocumentsScreen";
 import DocReaderScreen from "./screens/DocReaderScreen";
 import MepBrowserScreen from "./screens/MepBrowserScreen";
 import FirebaseProvider from "./providers/FirebaseProvider";
+import ReviewWriterScreen from "./screens/ReviewWriterScreen";
 
 export default function App() {
   console.log("=== SEJMOGRAF ===");
@@ -36,6 +37,11 @@ export default function App() {
               name="Doc Reader Screen"
               component={DocReaderScreen}
               options={{ title: "Dokument" }}
+            />
+            <Stack.Screen
+              name="Review Writer Screen"
+              component={ReviewWriterScreen}
+              options={{ title: "Nowa Recenzja" }}
             />
           </Stack.Navigator>
         </NavigationContainer>

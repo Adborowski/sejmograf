@@ -12,7 +12,6 @@ const MepScreen = ({ route }) => {
       <Interpelations />
       <Enquiries />
       <Reviews id={route.params.id} data={route.params} />
-      <ReviewWriter id={route.params.id} data={route.params} />
     </View>
   );
 };

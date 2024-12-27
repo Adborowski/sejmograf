@@ -7,25 +7,46 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import { getUniqueId } from "../utils/getUniqueId";
+import { useNavigation } from "@react-navigation/native";
 
 const ReviewWriter = ({ id, data }) => {
-  let suffix = "";
+  const navigation = useNavigation();
+
+  if (!data) {
+    data = {};
+  }
+  let prefix = "";
   if (data.firstLastName) {
-    suffix = `dla: ${data.firstLastName}`;
+    prefix = `Nowa recenzja dla: ${data.firstLastName}`;
   }
   const ctx = useContext(FirebaseContext);
-  const { app, database, ref, set } = ctx;
+  const { database, ref, set } = ctx;
 
-  const [reviewText, setReviewText] = useState("Random review");
+  const [reviewText, setReviewText] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   const handleSubmit = () => {
-    set(ref(database, "reviews/" + id + `/${getUniqueId()}/`), {
-      reviewedItemId: id,
-      reviewText: reviewText,
-    });
+    let now = new Date();
+    now = now.toUTCString();
+
+    if (!reviewText) {
+      setFeedback("");
+      return;
+    }
+
+    if (reviewText) {
+      set(ref(database, "reviews/" + id + `/${getUniqueId()}/`), {
+        reviewedItemId: id,
+        reviewText: reviewText,
+        date: now,
+      }).then(() => {
+        setFeedback("Dodano recenzję!");
+        navigation.goBack();
+      });
+    }
   };
 
   const handleChangeText = (text) => {
@@ -35,16 +56,27 @@ const ReviewWriter = ({ id, data }) => {
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={110} behavior={"position"}>
       <View style={styles.container}>
-        <Text>Dodaj recenzję {suffix}</Text>
+        <Text>{prefix}</Text>
         <TextInput
+          autoFocus={true}
           multiline={true}
           placeholder="Twoja recenzja"
           style={styles.input}
           onChangeText={handleChangeText}
         ></TextInput>
-        <Pressable onPress={handleSubmit} style={styles.btn}>
-          <Text style={styles.btnText}>Wyślij</Text>
-        </Pressable>
+        <View style={styles.bottomBar}>
+          <Pressable
+            onPress={handleSubmit}
+            style={[styles.btn, !reviewText ? styles.disabled : ""]}
+          >
+            <Text style={styles.btnText}>Wyślij</Text>
+          </Pressable>
+          {feedback && (
+            <View style={styles.feedbackWrapper}>
+              <Text>{feedback}</Text>
+            </View>
+          )}
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -54,35 +86,41 @@ export default ReviewWriter;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#eee",
     borderWidth: 1,
     borderColor: "black",
     padding: 12,
     borderRadius: 3,
-  },
-  focusMask: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: 100,
-    backgroundColor: "black",
+    gap: 12,
   },
   input: {
     padding: 12,
-    maxWidth: "90%",
-    minHeight: 60,
+    minHeight: 120,
     borderRadius: 6,
-    marginVertical: 12,
     backgroundColor: "#fafafa",
   },
   btn: {
-    padding: 12,
+    paddingVertical: 12,
     borderRadius: 6,
     width: 80,
     backgroundColor: "#ccf",
   },
+  disabled: {
+    opacity: 0.25,
+    backgroundColor: "#bbbbbb",
+  },
   btnText: {
     textAlign: "center",
     margin: "auto",
+  },
+  date: {
+    opacity: 0.3,
+    marginTop: 3,
+  },
+  bottomBar: {
+    flexDirection: "row",
+  },
+  feedbackWrapper: {
+    justifyContent: "center",
+    marginLeft: 12,
   },
 });
