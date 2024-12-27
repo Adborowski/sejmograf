@@ -2,14 +2,17 @@ import { View, StyleSheet } from "react-native";
 import MepProfile from "../components/MepProfile";
 import Interpelations from "../components/InterpelationsCounter";
 import Enquiries from "../components/EnquiriesCounter";
-import SearchBar from "../components/SearchBar";
+import ReviewWriter from "../components/ReviewWriter";
+import Reviews from "../components/Reviews";
 
-const MepScreen = () => {
+const MepScreen = ({ route }) => {
   return (
     <View style={styles.mepScreen}>
       <MepProfile />
       <Interpelations />
       <Enquiries />
+      <Reviews id={route.params.id} data={route.params} />
+      <ReviewWriter id={route.params.id} data={route.params} />
     </View>
   );
 };

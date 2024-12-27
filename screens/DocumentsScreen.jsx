@@ -5,36 +5,37 @@ import DocumentPill from "../components/DocumentPill";
 import globalStyles from "../utils/global-styles";
 import SearchBar from "../components/SearchBar";
 
-const DocumentsScreen = () => {
-  const route = useRoute();
+const DocumentsScreen = ({ route }) => {
   let untouchedDocuments = route.params.documents;
   const [documents, setDocuments] = useState(untouchedDocuments);
+  const [searchTerm, setSearchTerm] = useState("");
   const mep = route.params.mep;
   const parentDocument = route.params.parentDocument;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setDocuments(
+      untouchedDocuments.filter((doc) => {
+        const filterString = doc.title + doc.from + doc.to;
+        return filterString.toLowerCase().includes(searchTerm.toLowerCase());
+      })
+    );
+  }, [searchTerm]);
 
-  const processDocuments = (documents) => {};
-
-  let editedDocuments = documents;
-  // edit each document
-  editedDocuments = editedDocuments.map((doc) => {
-    if (parentDocument && !doc.title) {
-      // it's a reply to an existing document; doesn't have a title
-      return {
-        ...doc,
-        title: `RE: ${parentDocument.title}`,
-        subtitle: `${parentDocument.to}`,
-        isReply: true,
-        parentDocument: parentDocument,
-      };
-    }
-    return { ...doc };
-  });
+  if (!documents) {
+    return (
+      <View>
+        <Text>No Documents</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
-      <SearchBar list={documents} setList={setDocuments} />
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        list={documents}
+      />
       <FlatList
         data={documents}
         renderItem={(data) => (

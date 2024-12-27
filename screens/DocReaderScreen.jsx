@@ -47,14 +47,16 @@ const DocReaderScreen = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(bodyLink.href)
-      .then((res) => {
-        return res.text();
-      })
-      .then((text) => {
-        setHtml(text);
-        setLoading(false);
-      });
+    if (bodyLink) {
+      fetch(bodyLink.href)
+        .then((res) => {
+          return res.text();
+        })
+        .then((text) => {
+          setHtml(text);
+          setLoading(false);
+        });
+    }
   }, []);
 
   useEffect(() => {

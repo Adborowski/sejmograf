@@ -12,18 +12,27 @@ import {
 const Meps = ({ navigation }) => {
   const [meps, setMeps] = useState(require("../data/meps-all.json"));
   const untouchedList = require("../data/meps-all.json");
-  let allMeps = require("../data/meps-all.json");
   const images = require.context("../assets/img/", false, /\.jpeg$/);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    console.log("new meps", meps.length, meps.length < 5 ? meps : null);
-  }, [meps]);
+    setMeps(
+      untouchedList.filter((mep) => {
+        const filterString = mep.firstLastName + mep.lastFirstName;
+        return filterString.toLowerCase().includes(searchTerm.toLowerCase());
+      })
+    );
+  }, [searchTerm]);
 
   return (
     <View>
       {meps && (
         <View style={styles.container}>
-          <SearchBar list={untouchedList} setList={setMeps} />
+          <SearchBar
+            setSearchTerm={setSearchTerm}
+            searchTerm={searchTerm}
+            list={meps}
+          />
           <FlatList
             data={meps}
             renderItem={(mep) => {

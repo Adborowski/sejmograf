@@ -1,37 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import { useState, useEffect } from "react";
 
-const SearchBar = ({ list, setList }) => {
-  const [term, setTerm] = useState("");
-  const untouchedList = list;
-
+const SearchBar = ({ searchTerm, setSearchTerm, list }) => {
   const handleChange = (change) => {
-    setTerm(change);
+    setSearchTerm(change);
   };
-
-  useEffect(() => {
-    setList(
-      untouchedList.filter((item) => {
-        // case: meps
-        if (item.birthDate) {
-          const itemString =
-            item.firstName +
-            item.lastName +
-            item.firstLastName +
-            item.lastFirstName;
-          return itemString.toLowerCase().includes(term.toLowerCase());
-        }
-
-        if (item.name) {
-          return item.name.includes(term);
-        }
-      })
-    );
-
-    if (!term) {
-      setList(untouchedList);
-    }
-  }, [term]);
 
   return (
     <View style={styles.container}>
@@ -43,10 +16,15 @@ const SearchBar = ({ list, setList }) => {
       </View>
       <View style={styles.inputWrapper}>
         <TextInput
+          autoCorrect={false}
+          autoComplete={false}
           onChangeText={handleChange}
           placeholder="Szukaj"
           style={styles.input}
         />
+      </View>
+      <View style={styles.countWrapper}>
+        <Text style={styles.count}>{list.length}</Text>
       </View>
     </View>
   );
@@ -72,9 +50,11 @@ const styles = StyleSheet.create({
     height: 42,
     margin: "auto",
     borderRadius: 100,
+    paddingRight: 4,
+    paddingTop: 3,
     // backgroundColor: "white",
-    padding: 9,
-    opacity: 0.25,
+
+    opacity: 0.1,
   },
 
   inputWrapper: {
@@ -89,5 +69,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 60,
   },
-  placeholder: {},
+  countWrapper: {
+    flexDirection: "column",
+    justifyContent: "center",
+    position: "absolute",
+    height: 50,
+    width: 42,
+    top: 0,
+    left: 0,
+    // backgroundColor: "pink",
+  },
+  count: {
+    opacity: 0.25,
+    fontSize: 10,
+    textAlign: "center",
+  },
 });

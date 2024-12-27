@@ -9,6 +9,12 @@ const DocumentPill = (props) => {
   if (!title) {
     title = "Dokument";
   }
+
+  if (parentDocument) {
+    title = "RE: " + parentDocument.title;
+    to = parentDocument.to.join("\n");
+  }
+
   const navigation = useNavigation();
   let processedTitle = title.replace("Interpelacja w", "W");
 
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   date: { color: "black", opacity: 0.5, marginBottom: 6 },
-  title: { fontWeight: "600", fontSize: 18, maxWidth: "95%" },
+  title: { fontWeight: "600", fontSize: 16, maxWidth: "95%" },
   subtitle: {
     fontSize: 16,
     opacity: 0.5,
