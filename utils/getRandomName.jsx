@@ -14,8 +14,6 @@ const names = [
     "Urszula", "Weronika", "Wiesława", "Wiktoria", "Zofia", "Żaneta", "Alina", "Kamila", "Mariola", "Zuzanna"
   ];
 
-console.log(names);
-
 //prettier-ignore
 const nouns = [
     "jabłko", "samochód", "pies", "dom", "kwiat", "szkoła", "książka", "krzesło", "stół", "miasto",
@@ -29,8 +27,6 @@ const nouns = [
     "muzyka", "książka", "obraz", "film", "teatr", "wulkan", "wyspa", "długopis", "ołówek", "papier",
     "głos", "śpiew", "nadzieja", "las", "pole", "łąka", "wiadomość", "podróż", "zdrowie", "szczęście"
   ];
-
-console.log(nouns);
 
 export const getRandomName = () => {
   const i1 = Math.floor(Math.random() * names.length);

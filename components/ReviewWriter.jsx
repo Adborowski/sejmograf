@@ -30,10 +30,6 @@ const ReviewWriter = ({ id, data }) => {
   const [feedback, setFeedback] = useState("");
   const [starCount, setStarCount] = useState(0);
 
-  useEffect(() => {
-    console.log(starCount + " stars");
-  }, [starCount]);
-
   const handleSubmit = () => {
     let now = new Date();
     now = now.toUTCString();

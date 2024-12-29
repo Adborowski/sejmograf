@@ -10,6 +10,7 @@ import FirebaseProvider from "./providers/FirebaseProvider";
 import ReviewWriterScreen from "./screens/ReviewWriterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import HeaderControls from "./components/HeaderControls";
+import UserProfileScreen from "./screens/UserProfileScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -26,6 +27,11 @@ export default function App() {
               name="Login Screen"
               component={LoginScreen}
               options={{ title: "Zaloguj się" }}
+            />
+            <Stack.Screen
+              name="User Profile Screen"
+              component={UserProfileScreen}
+              options={{ title: "Profil" }}
             />
             <Stack.Screen
               name="Mep Browser Screen"
