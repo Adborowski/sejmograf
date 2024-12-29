@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { createContext, useState, useEffect } from "react";
 import { firebaseConfig } from "../firebaseConfig";

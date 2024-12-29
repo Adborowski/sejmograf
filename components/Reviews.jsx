@@ -96,7 +96,7 @@ const Reviews = ({ id, data }) => {
 export default Reviews;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, maxHeight: 300 },
   topBar: {
     flexDirection: "row",
     gap: 12,

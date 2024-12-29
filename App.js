@@ -8,16 +8,20 @@ import DocReaderScreen from "./screens/DocReaderScreen";
 import MepBrowserScreen from "./screens/MepBrowserScreen";
 import FirebaseProvider from "./providers/FirebaseProvider";
 import ReviewWriterScreen from "./screens/ReviewWriterScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 export default function App() {
-  console.log("=== SEJMOGRAF ===");
-
   const Stack = createNativeStackNavigator();
   return (
     <FirebaseProvider>
       <View style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen
+              name="Login Screen"
+              component={LoginScreen}
+              options={{ title: "Zaloguj się" }}
+            />
             <Stack.Screen
               name="Mep Browser Screen"
               component={MepBrowserScreen}
