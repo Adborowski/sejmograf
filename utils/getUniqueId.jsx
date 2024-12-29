@@ -1,3 +1,5 @@
+import * as Crypto from "expo-crypto";
+
 export const getUniqueId = () => {
-  return Math.floor(Math.random() * 100000000);
+  return Crypto.randomUUID();
 };

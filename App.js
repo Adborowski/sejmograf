@@ -2,13 +2,14 @@ import Meps from "./components/Meps";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MepScreen from "./screens/MepScreen";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import DocumentsScreen from "./screens/DocumentsScreen";
 import DocReaderScreen from "./screens/DocReaderScreen";
 import MepBrowserScreen from "./screens/MepBrowserScreen";
 import FirebaseProvider from "./providers/FirebaseProvider";
 import ReviewWriterScreen from "./screens/ReviewWriterScreen";
 import LoginScreen from "./screens/LoginScreen";
+import HeaderControls from "./components/HeaderControls";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -16,7 +17,11 @@ export default function App() {
     <FirebaseProvider>
       <View style={{ flex: 1 }}>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerRight: () => <HeaderControls />,
+            }}
+          >
             <Stack.Screen
               name="Login Screen"
               component={LoginScreen}
