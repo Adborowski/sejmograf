@@ -12,7 +12,9 @@ const Review = ({ item }) => {
     <View style={styles.review}>
       <View style={styles.reviewInfo}>
         <View style={styles.dateWrapper}>
-          <Text style={styles.date}>{getFormattedDate(item.date)}</Text>
+          <Text style={styles.date}>
+            {getFormattedDate(item.date)} {item.user ? item.user.name : ""}
+          </Text>
         </View>
         <StarsRating size={12} count={item.stars} />
       </View>

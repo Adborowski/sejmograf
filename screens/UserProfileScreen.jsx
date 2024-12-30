@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useContext } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useContext, useEffect } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const UserProfileScreen = () => {
-  const { userData } = useContext(FirebaseContext);
+const UserProfileScreen = ({ navigation }) => {
+  const { userData, auth, signOut, user } = useContext(FirebaseContext);
   const { name, email, uid } = userData;
+
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate("Login Screen");
+    }
+  }, [user]);
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -15,6 +21,13 @@ const UserProfileScreen = () => {
         <Text style={styles.text}>{name}</Text>
         <Text style={styles.text}>{email}</Text>
         <Text style={[styles.text, styles.uid]}>{uid}</Text>
+        <Pressable
+          onPress={() => {
+            signOut(auth);
+          }}
+        >
+          <Text style={styles.btnSignOut}>Sign Out</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -51,5 +64,13 @@ const styles = StyleSheet.create({
     opacity: 0.25,
     marginTop: 12,
     fontSize: 12,
+  },
+  btnSignOut: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "black",
+    textAlign: "center",
+    marginTop: 18,
+    borderRadius: 6,
   },
 });

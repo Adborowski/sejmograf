@@ -21,13 +21,6 @@ const Login = ({ navigation }) => {
   );
   const [password, setPassword] = useState("dummy123");
   const [error, setError] = useState("");
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    if (user) {
-      navigation.navigate("Mep Browser Screen");
-    }
-  }, [user]);
 
   const firebase = useContext(FirebaseContext);
   const {
@@ -37,13 +30,20 @@ const Login = ({ navigation }) => {
     ref,
     set,
     database,
+    user,
   } = firebase;
+
+  useEffect(() => {
+    if (user) {
+      navigation.navigate("Home Screen");
+    }
+  }, [user]);
 
   const handleSubmitLogin = () => {
     setError();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        setUser(userCredential.user);
+      .then(() => {
+        navigation.navigate("Home Screen");
       })
       .catch((error) => {
         console.log(error);
@@ -70,12 +70,12 @@ const Login = ({ navigation }) => {
     const name = getRandomName();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        setUser(userCredential.user);
         saveUser({
           name: name,
           email: userCredential.user.email,
           uid: userCredential.user.uid,
         });
+        navigation.navigate("Home Screen");
       })
       .catch((error) => {
         console.log(error);

@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {
-  getAuth,
+  signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
@@ -21,7 +21,6 @@ const FirebaseProvider = ({ children }) => {
   const [user, setUser] = useState(); // firebase auth user object
   const [userData, setUserData] = useState(); // from user database
   const [database, setDatabase] = useState();
-  const showLogs = false;
 
   useEffect(() => {
     setApp(initializeApp(firebaseConfig));
@@ -39,25 +38,12 @@ const FirebaseProvider = ({ children }) => {
   }, [app]);
 
   useEffect(() => {
-    // get user data from internal database
     if (user) {
       onValue(ref(database, `users/${user.uid}`), (snapshot) => {
         setUserData(snapshot.val());
       });
     }
   }, [user]);
-
-  useEffect(() => {
-    if (showLogs && app) {
-      console.log("Initializing App...", Object.keys(app));
-    }
-  }, [app]);
-
-  useEffect(() => {
-    if (showLogs && database) {
-      console.log("Fetching database...", Object.keys(database));
-    }
-  }, [database]);
 
   if (auth) {
     onAuthStateChanged(auth, (user) => {
@@ -78,6 +64,7 @@ const FirebaseProvider = ({ children }) => {
         onValue: onValue,
         createUserWithEmailAndPassword: createUserWithEmailAndPassword,
         signInWithEmailAndPassword: signInWithEmailAndPassword,
+        signOut: signOut,
       }}
     >
       {children}

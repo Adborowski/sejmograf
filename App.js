@@ -1,8 +1,7 @@
-import Meps from "./components/Meps";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MepScreen from "./screens/MepScreen";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import DocumentsScreen from "./screens/DocumentsScreen";
 import DocReaderScreen from "./screens/DocReaderScreen";
 import MepBrowserScreen from "./screens/MepBrowserScreen";
@@ -11,6 +10,7 @@ import ReviewWriterScreen from "./screens/ReviewWriterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import HeaderControls from "./components/HeaderControls";
 import UserProfileScreen from "./screens/UserProfileScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -27,6 +27,11 @@ export default function App() {
               name="Login Screen"
               component={LoginScreen}
               options={{ title: "Zaloguj się" }}
+            />
+            <Stack.Screen
+              name="Home Screen"
+              component={HomeScreen}
+              options={{ title: "", headerBackVisible: false }}
             />
             <Stack.Screen
               name="User Profile Screen"

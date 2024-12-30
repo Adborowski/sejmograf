@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import { getUniqueId } from "../utils/getUniqueId";
 import { useNavigation } from "@react-navigation/native";
@@ -24,7 +24,7 @@ const ReviewWriter = ({ id, data }) => {
     prefix = `Nowa recenzja dla: ${data.firstLastName}`;
   }
   const ctx = useContext(FirebaseContext);
-  const { database, ref, set } = ctx;
+  const { database, ref, set, user, userData } = ctx;
 
   const [reviewText, setReviewText] = useState("");
   const [feedback, setFeedback] = useState("");
@@ -45,6 +45,7 @@ const ReviewWriter = ({ id, data }) => {
         reviewText: reviewText,
         date: now,
         stars: starCount,
+        user: userData,
       }).then(() => {
         setFeedback("Dodano recenzję!");
         navigation.goBack();
