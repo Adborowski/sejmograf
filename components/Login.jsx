@@ -60,7 +60,7 @@ const Login = ({ navigation }) => {
         ),
         user
       ).then(() => {
-        console.log("\u001b[1;36mUser saved: " + `${user.name} ${user.email}`);
+        console.log("\u001b[1;36m[NEW USER] " + `${user.name} ${user.email}`);
       });
     }
   };

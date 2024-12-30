@@ -5,10 +5,13 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  initializeAuth,
+  getReactNativePersistence,
 } from "firebase/auth";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { createContext, useState, useEffect } from "react";
 import { firebaseConfig } from "../firebaseConfig";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 export const FirebaseContext = createContext();
 
@@ -23,18 +26,23 @@ const FirebaseProvider = ({ children }) => {
   useEffect(() => {
     setApp(initializeApp(firebaseConfig));
     setDatabase(getDatabase(app));
-    setAuth(getAuth());
   }, []);
 
   useEffect(() => {
-    if (user) {
-      console.log("\u001b[1;32mLogged in as " + user.email);
+    if (app) {
+      setAuth(
+        initializeAuth(app, {
+          persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+        })
+      );
+    }
+  }, [app]);
 
-      // get user from our database
-      const usersRef = ref(database, `users/${user.uid}`);
-      onValue(usersRef, (snapshot) => {
-        const data = snapshot.val();
-        setUserData(data);
+  useEffect(() => {
+    // get user data from internal database
+    if (user) {
+      onValue(ref(database, `users/${user.uid}`), (snapshot) => {
+        setUserData(snapshot.val());
       });
     }
   }, [user]);
