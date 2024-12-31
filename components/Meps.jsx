@@ -35,6 +35,7 @@ const Meps = ({ navigation }) => {
           />
           <FlatList
             data={meps}
+            contentContainerStyle={{ paddingBottom: 180 }}
             renderItem={(mep) => {
               return (
                 <Mep

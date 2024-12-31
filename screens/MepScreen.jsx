@@ -1,5 +1,4 @@
 import { View, StyleSheet, SectionList, VirtualizedList } from "react-native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import MepProfile from "../components/MepProfile";
 import Interpelations from "../components/InterpelationsCounter";
 import Enquiries from "../components/EnquiriesCounter";
