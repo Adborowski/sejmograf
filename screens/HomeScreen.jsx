@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccf",
     margin: "auto",
     justifyContent: "center",
-    borderRadius: 12,
+    borderRadius: 6,
   },
   controls: {
     gap: 12,

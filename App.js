@@ -12,6 +12,7 @@ import LoginScreen from "./screens/LoginScreen";
 import HeaderControls from "./components/HeaderControls";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import HomeScreen from "./screens/HomeScreen";
+import ProceedingScreen from "./screens/ProceedingScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -39,6 +40,11 @@ export default function App() {
                 name="User Profile Screen"
                 component={UserProfileScreen}
                 options={{ title: "Profil" }}
+              />
+              <Stack.Screen
+                name="Proceeding Screen"
+                component={ProceedingScreen}
+                options={{ title: "Posiedzenie" }}
               />
               <Stack.Screen
                 name="Mep Browser Screen"

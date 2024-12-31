@@ -1,31 +1,45 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import { FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
-const Proceeding = ({ item }) => {
+export const Proceeding = ({ item, disableControls }) => {
   let editedTitle = item.title.split("RP")[0];
+  const navigation = useNavigation();
+  const dates = item.dates;
 
   return (
-    <View style={styles.proceedingWrapper}>
-      <View style={styles.topText}>
-        <Text style={styles.procTitle}>{editedTitle}</Text>
-        <Text style={styles.procDayCounter}>{item.dates.length} dni</Text>
+    <Pressable
+      onPress={() => {
+        if (!disableControls) {
+          navigation.navigate("Proceeding Screen", {
+            item: item,
+          });
+        }
+      }}
+    >
+      <View style={styles.proceedingWrapper}>
+        <View style={styles.topText}>
+          <Text style={styles.procTitle}>{editedTitle}</Text>
+          <Text style={styles.procDayCounter}>
+            {dates.length} {dates.length == 1 ? "dzień" : "dni"}
+          </Text>
+        </View>
+        <FlatList
+          style={styles.procDates}
+          numColumns={3}
+          data={dates}
+          renderItem={({ item }) => {
+            return (
+              <View>
+                <Text style={styles.procDate}>{item}</Text>
+              </View>
+            );
+          }}
+        />
       </View>
-      <FlatList
-        style={styles.procDates}
-        horizontal={true}
-        data={item.dates}
-        renderItem={({ item }) => {
-          return (
-            <View>
-              <Text style={styles.procDate}>{item}</Text>
-            </View>
-          );
-        }}
-      />
-    </View>
+    </Pressable>
   );
 };
 
@@ -64,11 +78,17 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 
+  procDates: {
+    gap: 6,
+  },
+
   procDate: {
     padding: 9,
     backgroundColor: "white",
     marginRight: 6,
-    borderRadius: 3,
+    borderRadius: 30,
+    width: 100,
+    textAlign: "center",
   },
 
   procTitle: {
@@ -76,9 +96,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   proceedingWrapper: {
-    gap: 6,
+    gap: 12,
     backgroundColor: "#ddf",
     padding: 12,
+    borderRadius: 6,
   },
   separator: {
     height: 9,
