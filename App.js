@@ -13,6 +13,7 @@ import HeaderControls from "./components/HeaderControls";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ProceedingScreen from "./screens/ProceedingScreen";
+import VotingScreen from "./screens/VotingScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -70,6 +71,11 @@ export default function App() {
                 name="Review Writer Screen"
                 component={ReviewWriterScreen}
                 options={{ title: "Nowa Recenzja" }}
+              />
+              <Stack.Screen
+                name="Voting Screen"
+                component={VotingScreen}
+                options={{ title: "Głosowanie" }}
               />
             </Stack.Navigator>
           </NavigationContainer>

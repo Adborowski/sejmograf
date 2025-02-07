@@ -3,6 +3,7 @@ import globalStyles from "../utils/global-styles";
 import React from "react";
 import Proceedings from "../components/Proceedings";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getVotingData } from "../utils/getVotingData";
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -16,6 +17,14 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text style={styles.btnText}>Posłowie</Text>
         </Pressable>
+        <Pressable
+          style={styles.btn}
+          onPress={() => {
+            getVotingData();
+          }}
+        >
+          <Text style={styles.btnText}>Get Data</Text>
+        </Pressable>
         <Proceedings />
       </View>
     </View>
@@ -26,10 +35,9 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: "#ccf",
-    margin: "auto",
+    backgroundColor: "#ddd",
     justifyContent: "center",
-    borderRadius: 6,
+    borderRadius: 60,
   },
   controls: {
     gap: 12,
