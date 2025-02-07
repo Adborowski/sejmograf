@@ -6,8 +6,6 @@ const VotingPill = ({ item, index, maxIndex }) => {
   // maxIndex is total votings in proceeding
   const navigation = useNavigation();
 
-  item.topic = item.topic.replaceAll(".", "");
-
   const displayDate = new Date(item.date).toUTCString();
   let hasDuplicateTitle = false;
 
@@ -28,7 +26,6 @@ const VotingPill = ({ item, index, maxIndex }) => {
           </Text>
           <Text style={styles.date}>{displayDate}</Text>
           <Text style={styles.title}>{item.title}</Text>
-
           {!hasDuplicateTitle && <Text style={styles.topic}>{item.topic}</Text>}
         </View>
         <View style={styles.results}>
@@ -54,6 +51,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
+    maxWidth: "90%",
   },
   topic: {
     fontSize: 18,
