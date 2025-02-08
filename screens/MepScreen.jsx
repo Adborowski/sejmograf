@@ -4,13 +4,14 @@ import Interpelations from "../components/InterpelationsCounter";
 import Enquiries from "../components/EnquiriesCounter";
 import Reviews from "../components/Reviews";
 import globalStyles from "../utils/global-styles";
+import Attendance from "../components/Attendance";
 
 const MepScreen = ({ route }) => {
   return (
     <View style={globalStyles.screen}>
       <MepProfile />
       <Interpelations />
-      <Enquiries />
+      <Attendance />
       <Reviews id={route.params.id} data={route.params} />
     </View>
   );

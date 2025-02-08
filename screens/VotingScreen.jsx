@@ -2,11 +2,12 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import globalStyles from "../utils/global-styles";
+import { getTerm } from "../utils/getTerm";
 
 const VotingScreen = ({ route }) => {
   const data = route.params.item;
   const { proceedingNumber, votingNumber } = data;
-  const query = `https://api.sejm.gov.pl/sejm/term10/votings/${proceedingNumber}/${votingNumber}`;
+  const query = `https://api.sejm.gov.pl/sejm/term${getTerm()}/votings/${proceedingNumber}/${votingNumber}`;
 
   const [votingDetails, setVotingDetails] = useState();
 

@@ -3,16 +3,19 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 import { firebaseConfig } from "../firebaseConfig";
+import { createAttendance } from "./getAttendance";
+import { getTerm } from "./getTerm";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// gets all voting data into a big json
+// no inputs required - gets the sejm term automatically and then cascades into a search
+// warning - big query, use sparingly and cache
 export const getVotingData = async () => {
   const ac = ansiColors;
-  console.log(`${ac.cyan}Fetching data...${ac.reset}`);
-  const term = await fetch(`https://api.sejm.gov.pl/sejm/term10`);
-  const termData = await term.json();
-  const termId = termData.num;
+
+  const termId = 10;
 
   // procs = proceedings
   let procs = await fetch(
@@ -31,13 +34,13 @@ export const getVotingData = async () => {
   });
 
   let procsCount = procsData.length;
-  console.log("procsCount", procsCount);
+  console.log(`${ac.cyan}term${termId} - ${procsCount} proceedings`);
 
   let votingsCounter = [];
 
   for (let i = 1; i <= procsCount; i++) {
     let votingsInProc = await fetch(
-      `https://api.sejm.gov.pl/sejm/term10/votings/${i}`
+      `https://api.sejm.gov.pl/sejm/term${getTerm()}/votings/${i}`
     );
 
     if (votingsInProc.status !== 200) {
@@ -49,38 +52,61 @@ export const getVotingData = async () => {
       ...votingsCounter,
       { termId: termId, procId: i, votings: votingsInProcData.length },
     ];
+
+    set(
+      ref(db, `votingsCounter/${termId}/${i}`),
+      votingsInProcData.length
+    ).then((x) => {
+      console.log(
+        `${ac.brightYellow}Saved votingsCounter ${termId}/${i}${ac.reset}`
+      );
+    });
   }
 
-  const procCount = votingsCounter.length;
+  let procCount = votingsCounter.length;
 
-  console.log(
-    `Total votings in term ${termId}: ${votingsCounter.reduce(
-      (a, c) => a + c.votings,
-      0
-    )} in ${procCount} proceedings.`
-  );
+  const votingData = [];
+  const errorData = [];
 
-  const votingData = {};
+  // DUMMY VALUES (to fetch everything, set starter to 0 and comment out below procCount assign)
+  let starterProcIndex = 3;
+  procCount = 4;
 
-  for (let i = 0; i < procCount; i++) {
+  // CHANGE i to 0 for PROD
+  for (let i = starterProcIndex; i < procCount; i++) {
     // loop through procs counter
-    votingData[i + 1] = {};
-    const votingsCountInProc = votingsCounter[i].votings;
+    votingData[i + 1] = [];
+    // prettier-ignore
+    console.log(`${ac.yellow}Working on proc ${i + 1}...${ac.reset}`);
+    let votingsCountInProc = votingsCounter[i].votings;
     for (let j = 0; j < votingsCountInProc; j++) {
-      votingData[i + 1][
-        j + 1
-      ] = `https://api.sejm.gov.pl/sejm/term${termId}/votings/${i + 1}/${
-        j + 1
-      }`;
-      // votingData[i + 1] = `https://api.sejm.gov.pl/sejm/term${termId}/votings/${
-      //   i + 1
-      // }/${j + 1}`;
-      // inside proc, loop through votings counter
-      // console.log(
-      //   `https://api.sejm.gov.pl/sejm/term${termId}/votings/${i + 1}/${j + 1}`
-      // );
+      // prettier-ignore
+      const query = `https://api.sejm.gov.pl/sejm/term${termId}/votings/${i + 1}/${j + 1}`;
+
+      const votingDetails = await fetch(query);
+      if (votingDetails.status !== 200) {
+        console.log(`${ac.red}${votingDetails.status}${ac.reset}`);
+        errorData.push({
+          termId: termId,
+          procId: i + 1,
+          votingId: j + 1,
+          status: votingDetails.status,
+        });
+        break;
+      }
+
+      const votingDetailsData = await votingDetails.json(); // details of a single voting
+
+      // incremental db updates
+      set(ref(db, `votings/${i + 1}/${j + 1}`), votingDetailsData).then((x) => {
+        console.log(
+          `${ac.green}Saved voting data for ${i + 1}/${j + 1}.${ac.reset}`
+        );
+      });
     }
   }
 
-  console.log(votingData);
+  if (errorData.length) {
+    console.log(`${ac.red}${errorData.length} errors.${errorData}`);
+  }
 };

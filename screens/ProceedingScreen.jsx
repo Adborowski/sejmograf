@@ -4,13 +4,15 @@ import globalStyles from "../utils/global-styles";
 import { Proceeding } from "../components/Proceedings";
 import { useState, useEffect } from "react";
 import VotingPill from "../components/VotingPill";
+import { getTerm } from "../utils/getTerm";
 
 const ProceedingScreen = ({ route }) => {
   const [votings, setVotings] = useState([]);
 
   const data = route.params.item;
   const proceedingNumber = data.number;
-  const query = `https://api.sejm.gov.pl/sejm/term10/votings/${data.number}`; // get votings
+  // prettier-ignore
+  const query = `https://api.sejm.gov.pl/sejm/term${getTerm()}/votings/${data.number}`; // get votings
 
   useEffect(() => {
     fetch(query)

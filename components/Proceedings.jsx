@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { getTerm } from "../utils/getTerm";
 
 export const Proceeding = ({ item, disableControls }) => {
   let editedTitle = item.title.split("RP")[0];
@@ -47,7 +48,7 @@ const Proceedings = () => {
   const [data, setData] = useState();
 
   useEffect(() => {
-    fetch("https://api.sejm.gov.pl/sejm/term10/proceedings")
+    fetch(`https://api.sejm.gov.pl/sejm/term${getTerm()}/proceedings`)
       .then((res) => res.json())
       .then((json) => {
         json.sort((a, b) => b.number - a.number);
