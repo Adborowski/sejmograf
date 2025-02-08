@@ -26,23 +26,22 @@ export const createAttendance = async () => {
   }
 
   const allDates = await getProcDates();
-  console.log(allDates);
 
-  for (let procId = 1; procId <= 2; procId++) {
+  for (let procId = 2; procId <= Object.keys(votingsCounter).length; procId++) {
     for (let date of allDates[procId]) {
       console.log(
         `${ac.yellow}Proceeding ${procId} / ${
           Object.keys(allDates).length
-        }(${date})${ac.reset}`
+        }            ${date}${ac.reset}`
       );
 
       for (let mep of meps) {
         // prettier-ignore
-        if (mep.id < 4){
+        if (mep.id){
           const query = `https://api.sejm.gov.pl/sejm/term${getTerm()}/MP/${mep.id}/votings/${procId}/${date}`;
           const mepVotes = await fetch(query);
           let mepVotesData = await mepVotes.json();
-          mepVotesData = mepVotesData.filter((voteData)=>voteData.vote !== "ABSENT");
+          // mepVotesData = mepVotesData.filter((voteData)=>voteData.vote !== "ABSENT");
           console.log(`Mep ${mep.id} ${mep.firstLastName} ${mepVotesData.length}`);
 
           if (mepScores[mep.id]){
@@ -50,6 +49,13 @@ export const createAttendance = async () => {
           } else {
             mepScores[mep.id] = mepVotesData.length
           }
+
+          // set(ref(db, `attendance/${getTerm()}/${mep.id}`), mepScores[mep.id]).then((res)=>{
+          //   // console.log(`${ac.green} Updated attendance: [${mep.id}] ${mep.firstLastName}, score ${mepScores[mep.id]} ${ac.reset}`)
+          // }).catch((e)=>{
+          //   console.log(`${ac.red}Error saving attendance.${ac.reset}`)
+          //   console.log(e);
+          // });
           
         }
       }
@@ -63,47 +69,24 @@ const getProcDates = async () => {
   const procDates = await fetch(
     `https://api.sejm.gov.pl/sejm/term${getTerm()}/proceedings`
   );
-  const procDatesData = await procDates.json();
-  const meps = await getMeps();
+  let procDatesData = await procDates.json();
+  procDatesData = procDatesData.filter((datum) => datum.number);
   const allDates = {};
 
   try {
-    // for (let i = 0; i <= Object.keys(procDatesData).length; i++) {
-    for (let i = 0; i <= Object.keys(procDatesData).length; i++) {
+    for (let i = 0; i < Object.keys(procDatesData).length; i++) {
       const procId = procDatesData[i].number;
-      const dates = procDatesData[i].dates;
+      let dates = procDatesData[i].dates;
       if (procId) {
         allDates[procId] = dates;
       }
     }
   } catch (e) {
+    console.log(`${ac.red}Failed to get proc dates.`);
     console.log(e);
   }
 
   return allDates;
-
-  // MOVING
-  // dates are sorted into procs because procId required anyway for query
-  for (let procId = 1; procId <= 4; procId++) {
-    for (let date of allDates[procId]) {
-      console.log(
-        `${ac.yellow}${date} Proceeding ${procId} / ${
-          Object.keys(allDates).length
-        }${ac.reset}`
-      );
-
-      for (let mep of meps) {
-        // prettier-ignore
-        if (mep.id < 6){
-          const query = `https://api.sejm.gov.pl/sejm/term${getTerm()}/MP/${mep.id}/votings/${procId}/${date}`;
-          const mepVotes = await fetch(query);
-          const mepVotesData = await mepVotes.json();
-          console.log(`Mep ${mep.id} ${mep.firstLastName} ${mepVotesData.length}`);
-          
-        }
-      }
-    }
-  }
 };
 
 const getMeps = async () => {
