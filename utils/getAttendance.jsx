@@ -28,26 +28,35 @@ export const createAttendance = async () => {
   const allDates = await getProcDates();
   console.log(allDates);
 
-  for (let procId = 1; procId <= 4; procId++) {
+  for (let procId = 1; procId <= 2; procId++) {
     for (let date of allDates[procId]) {
       console.log(
-        `${ac.yellow}${date} Proceeding ${procId} / ${
+        `${ac.yellow}Proceeding ${procId} / ${
           Object.keys(allDates).length
-        }${ac.reset}`
+        }(${date})${ac.reset}`
       );
 
       for (let mep of meps) {
         // prettier-ignore
-        if (mep.id < 6){
+        if (mep.id < 4){
           const query = `https://api.sejm.gov.pl/sejm/term${getTerm()}/MP/${mep.id}/votings/${procId}/${date}`;
           const mepVotes = await fetch(query);
-          const mepVotesData = await mepVotes.json();
+          let mepVotesData = await mepVotes.json();
+          mepVotesData = mepVotesData.filter((voteData)=>voteData.vote !== "ABSENT");
           console.log(`Mep ${mep.id} ${mep.firstLastName} ${mepVotesData.length}`);
+
+          if (mepScores[mep.id]){
+            mepScores[mep.id] = mepScores[mep.id] + mepVotesData.length
+          } else {
+            mepScores[mep.id] = mepVotesData.length
+          }
           
         }
       }
     }
   }
+
+  console.log(mepScores);
 };
 
 const getProcDates = async () => {
