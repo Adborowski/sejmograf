@@ -7,14 +7,7 @@ import React from "react";
 const Attendance = () => {
   return (
     <View>
-      <Pressable
-        style={styles.btn}
-        onPress={() => {
-          createAttendance();
-        }}
-      >
-        <Text style={styles.btnLabel}>Create Attendance</Text>
-      </Pressable>
+      <Text>Attendance</Text>
     </View>
   );
 };

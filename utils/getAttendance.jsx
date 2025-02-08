@@ -3,6 +3,7 @@ import { getDatabase, ref, set, onValue, get, child } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebaseConfig";
+import { getTerm } from "./getTerm";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -15,15 +16,22 @@ export const getAttendance = async (mepId) => {
 export const createAttendance = async () => {
   console.log("Creating attendance...");
   const dbRef = ref(getDatabase());
-  get(child(dbRef, `votingsCounter/`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        let data = snapshot.val();
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  const snapshot = await get(child(dbRef, `votingsCounter/${getTerm()}`));
+  let data;
+
+  if (snapshot.exists) {
+    data = snapshot.val();
+  }
+
+  // use 1-indexed procIds
+  for (let procId = 3; procId < 4; procId++) {
+    //prettier-ignore
+    const votingsSnapshot = await get(child(dbRef, `votings/${getTerm()}/${procId}`));
+    const votings = votingsSnapshot.val();
+    console.log(
+      `${getTerm()}/${procId} has ${Object.keys(votings).length} votings`
+    );
+
+    console.log(votings);
+  }
 };
