@@ -29,14 +29,6 @@ const HomeScreen = ({ navigation }) => {
         <Pressable
           style={styles.btn}
           onPress={() => {
-            wipeVotingData();
-          }}
-        >
-          <Text style={styles.btnText}>Wipe Data</Text>
-        </Pressable>
-        <Pressable
-          style={styles.btn}
-          onPress={() => {
             createAttendance();
           }}
         >
